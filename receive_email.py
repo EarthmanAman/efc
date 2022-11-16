@@ -1,6 +1,7 @@
 import imaplib
 import email
 import csv
+from f import FetchEmail
 
 mail = imaplib.IMAP4_SSL("imap.gmail.com")
 email1 = "hashimathman.info@gmail.com"
@@ -14,7 +15,7 @@ try:
     return_code, data = mail.search(None, 'UnSeen')
     #count = len(mail_ids[0].split(" "))
     mail_ids = data[0].decode()
-    id_list = mail_ids.split()
+    id_list = mail_ids.split()[-4:]
     first_email_id = int(id_list[0])
     latest_email_id = int(id_list[-1])
     with open('persons.csv', 'w', newline="") as csvfile:
@@ -29,9 +30,16 @@ try:
                         msg = email.message_from_string(response_part[1].decode("utf-8"))
                         email_subject = msg['subject']
                         email_from = msg['from']
-                        print(msg['message'])
+                        print(email_subject)
                         filewriter.writerow([email_from, email_subject])
         mail.close()
 except Exception as e: print(e)
 
 print (count)
+
+# em = FetchEmail("imap.gmail.com", email1, password)
+# emls = em.fetch_unread_messages()
+
+# m = em.save_attachment(emls[1], "./result")
+
+# print(m)
